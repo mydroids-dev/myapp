@@ -11,16 +11,27 @@
             padding: 0;
         }
 
+        @media print {
+            body {
+                margin: 0; /* Remove margin for print */
+                padding: 0;
+                font-size: 12pt; /* Adjust font size for print */
+            }
+            button, a {
+                display: none; /* Hide buttons and links when printing */
+            }
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             color: #333;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             padding: 20px;
+            overflow: hidden; /* Prevent overflow for better print layout */
         }
 
         .container {
@@ -30,14 +41,21 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             text-align: left;
             width: 100%;
-            max-width: 600px;
+            max-width: 600px; /* Set max width for larger screens */
         }
 
         h1 {
             font-size: 2em;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: #2c3e50;
-            text-align: center;
+            text-align: center; /* Centering the main title */
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #34495e;
+            text-align: center; /* Centering the subtitle */
         }
 
         pre {
@@ -60,10 +78,25 @@
             font-size: 1em;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            width: 100%; /* Full-width button design */
+            text-align: center; /* Center button text */
         }
 
         button:hover {
             background-color: #2980b9; /* Darker shade on hover */
+        }
+
+        a {
+            display: block; /* Block level for consistent layout */
+            text-align: center; /* Center the link */
+            margin-top: 20px;
+            font-size: 16px;
+            color: #3498db; /* Link color */
+            text-decoration: none; /* No underline */
+        }
+
+        a:hover {
+            text-decoration: underline; /* Underline on hover for clarity */
         }
     </style>
 </head>
@@ -83,6 +116,7 @@
             Remaining Amount: ₹<%= booking.remainingAmount %>
         </pre>
         <button onclick="window.print()">Print Payment Slip</button>
+        <a href="/admin">Home</a>
     </div>
 </body>
 </html>

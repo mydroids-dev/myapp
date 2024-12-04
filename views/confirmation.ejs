@@ -5,73 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Confirmation</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        @media print {
+            body {
+                margin: 0;
+                padding: 20px; /* Ensures that the print area has some padding */
+                font-size: 12pt;
+            }
+            a, button {
+                display: none; /* Hide links and buttons in print */
+            }
+            .print-container {
+                page-break-after: always;
+            }
         }
 
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
             padding: 20px;
+        }
+
+        .print-container {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            max-width: 800px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
         }
 
         h1 {
             font-size: 2.5em;
             margin-bottom: 20px;
             color: #2c3e50;
+            text-align: center;
         }
 
-        pre {
-            background-color: #ffffff;
-            border: 1px solid #ddd;
+        .info {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #34495e; /* A darker shade for better readability */
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 10pt;
+            color: #7f8c8d; /* A subtle color for footer text */
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #2ecc71; /* Green background */
+            color: white;
+            border: none;
             border-radius: 5px;
-            padding: 20px;
-            overflow-x: auto;
-            font-size: 1em;
-            white-space: pre-wrap; /* Allow wrapping */
-            word-wrap: break-word; /* Break long words */
-            margin-bottom: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #27ae60; /* Darker green on hover */
         }
 
         a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
+            font-size: 16px;
+            color: #3498db; /* Blue color for the "Home" link */
         }
 
         a:hover {
-            background-color: #2980b9; /* Darker shade on hover */
+            text-decoration: underline; /* Underline on hover for clarity */
         }
     </style>
+    <script>
+        function printSlip() {
+            window.print(); // Open the print dialog
+        }
+    </script>
 </head>
 <body>
-    <h1>Booking Confirmation</h1>
-    <pre>
-        Booking ID: <%= reservationDetails.bookingId %>
-        From Station: <%= reservationDetails.fromStation %>
-        To Station: <%= reservationDetails.toStation %>
-        Travel Class: <%= reservationDetails.travelClass %>
-        Date of Travel: <%= reservationDetails.date %>
-        Name: <%= reservationDetails.name %>
-        Aadhar: <%= reservationDetails.aadhar %>
-        Mobile Number: <%= reservationDetails.mobile %>
-        Number of Passengers: <%= reservationDetails.numberOfPassengers %>
-        Total Amount: ₹<%= reservationDetails.totalAmount %>
-        Advance Payment: ₹<%= reservationDetails.advance %>
-        Remaining Amount: ₹<%= reservationDetails.remainingAmount %>
-    </pre>
-    <a href="/">Back to Home</a>
+    <div class="print-container">
+        <h1>Booking Confirmation</h1>
+        <div>
+            <div class="info"><span class="info-label">Booking ID:</span> <%= reservationDetails.bookingId %></div>
+            <div class="info"><span class="info-label">From Station:</span> <%= reservationDetails.fromStation %></div>
+            <div class="info"><span class="info-label">To Station:</span> <%= reservationDetails.toStation %></div>
+            <div class="info"><span class="info-label">Travel Class:</span> <%= reservationDetails.travelClass %></div>
+            <div class="info"><span class="info-label">Date of Travel:</span> <%= reservationDetails.date %></div>
+            <div class="info"><span class="info-label">Name:</span> <%= reservationDetails.name %></div>
+            <div class="info"><span class="info-label">Aadhar:</span> <%= reservationDetails.aadhar %></div>
+            <div class="info"><span class="info-label">Mobile Number:</span> <%= reservationDetails.mobile %></div>
+            <div class="info"><span class="info-label">Number of Passengers:</span> <%= reservationDetails.numberOfPassengers %></div>
+            <div class="info"><span class="info-label">Total Amount:</span> ₹<%= reservationDetails.totalAmount %></div>
+            <div class="info"><span class="info-label">Advance Payment:</span> ₹<%= reservationDetails.advance %></div>
+            <div class="info"><span class="info-label">Remaining Amount:</span> ₹<%= reservationDetails.remainingAmount %></div>
+        </div>
+        <div class="footer">Thank you for your booking!</div>
+    </div>
+    <div style="text-align:center; margin-top: 20px;">
+        <button onclick="printSlip()">Print Slip</button>
+        <br>
+        <a href="/">Home</a>
+    </div>
 </body>
 </html>

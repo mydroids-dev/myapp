@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Booking System</title>
+    <title>Mata Vaishno Devi Tour Ticketing</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,8 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background: url('bg.jpeg') no-repeat center center fixed; /* Background image for the body */
+            background-size: cover;
             color: #333;
             display: flex;
             justify-content: center;
@@ -23,10 +24,10 @@
 
         .container {
             text-align: center;
-            background: white;
+            background: rgba(255, 255, 255, 0.9); /* White background with transparency */
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
 
         h1 {
@@ -72,15 +73,22 @@
         .button.secondary:hover {
             background-color: #c0392b; /* Darker shade on hover */
         }
+
+        
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to Train Booking System</h1>
+        <h1>Welcome to Mata Vaishno Devi Train Ticketing</h1>
         <p class="description">Effortlessly book your train tickets online. Enjoy a smooth and hassle-free experience.</p>
         <div class="button-container">
-            <a href="/booking" class="button">Book a Ticket</a>
             <a href="/admin/login" class="button secondary">Admin Login</a>
+        </div>
+        <div class="station-board">
+            <h2>Latest Station Updates</h2>
+            <p>Check for the latest train arrivals and departures.</p>
+            <!-- More details can be added here -->
         </div>
     </div>
 </body>

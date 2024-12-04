@@ -4,10 +4,12 @@ const session = require('express-session');
 const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');  
 const mongoose = require('mongoose'); // Import mongoose
+const bcrypt = require('bcryptjs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const MONGODB_URI = 'mongodb+srv://iammshyam:wne2-Vg.wj-4p2*@cluster0.h1a1k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+// Replace this with your actual MongoDB URI
+const MONGODB_URI = 'mongodb+srv://iammshyam:wne2-Vg.wj-4p2%2A@cluster0.h1a1k.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 // Mongoose connection
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -32,6 +34,14 @@ const bookingSchema = new mongoose.Schema({
 
 const Booking = mongoose.model('Booking', bookingSchema);
 
+// Define Admin schema
+const adminSchema = new mongoose.Schema({
+    username: { type: String, unique: true, required: true },
+    password: { type: String, required: true },
+});
+
+const Admin = mongoose.model('Admin', adminSchema);
+
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -43,27 +53,53 @@ app.use(session({
 
 let bookingId = 1;
 
+// Admin Registration Page
+app.get('/admin/register', (req, res) => {
+    res.render('admin-register');
+});
+
+// Handle Admin Registration
+app.post('/admin/register', async (req, res) => {
+    const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10); // Hashing the password
+    const newAdmin = new Admin({ username, password: hashedPassword });
+    try {
+        await newAdmin.save(); // Save new admin to the database
+        res.redirect('/admin/login'); // Redirect to login after registration
+    } catch (error) {
+        console.error(error);
+        res.send("Error: Username may already exist.");
+    }
+});
+
 // Admin Login Page
 app.get('/admin/login', (req, res) => {
     res.render('admin-login');
 });
 
-app.post('/admin/login', (req, res) => {
-    const password = req.body.password;
-    if (password === 'admin123') {
-        req.session.isAdmin = true;
-        res.redirect('/admin');
+// Handle Admin Login
+app.post('/admin/login', async (req, res) => {
+    const { username, password } = req.body;
+    const admin = await Admin.findOne({ username });
+    if (admin) {
+        const match = await bcrypt.compare(password, admin.password);
+        if (match) {
+            req.session.isAdmin = true; // set session variable
+            res.redirect('/admin');
+        } else {
+            res.send("Invalid Password");
+        }
     } else {
-        res.send("Invalid Password");
+        res.send("Admin not found");
     }
 });
 
 // Middleware to check admin access
 function checkAdmin(req, res, next) {
     if (req.session.isAdmin) {
-        next();
+        next(); // User is authenticated
     } else {
-        res.redirect('/');
+        res.redirect('/admin/login'); // Redirect to login if not authenticated
     }
 }
 
@@ -117,7 +153,7 @@ app.get('/admin/download-excel', checkAdmin, async (req, res) => {
     res.end();
 });
 
-// Handle booking submission
+// Handle booking submission (public, no protection)
 app.post('/book', async (req, res) => {
     const { fromStation, toStation, class: travelClass, date, name, aadhar, mobile, numberOfPassengers, advancePayment } = req.body;
     const prices = { AC: 3000, Sleeper: 2000, General: 1500 };
@@ -183,11 +219,11 @@ app.get('/payment-slip/:id', checkAdmin, async (req, res) => {
 
 // Home Page
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index'); // Public access
 });
 
 // Booking Page
-app.get('/booking', (req, res) => {
+app.get('/admin/booking', checkAdmin, (req, res) => {
     res.render('booking');
 });
 
@@ -199,6 +235,55 @@ app.get('/slip/:id', async (req, res) => {
     } else {
         res.send("Booking not found.");
     }
+});
+
+// Edit Booking - GET
+app.get('/admin/edit/:id', checkAdmin, async (req, res) => {
+    const booking = await Booking.findOne({ bookingId: req.params.id });
+    if (booking) {
+        res.render('edit-ticket', { booking });
+    } else {
+        res.send("Booking not found.");
+    }
+});
+
+// Edit Booking - POST
+app.post('/admin/edit/:id', checkAdmin, async (req, res) => {
+    const { fromStation, toStation, class: travelClass, date, name, aadhar, mobile, numberOfPassengers, totalAmount, advance } = req.body;
+    const remainingAmount = totalAmount - advance;
+
+    try {
+        await Booking.updateOne(
+            { bookingId: req.params.id },
+            {
+                fromStation,
+                toStation,
+                travelClass,
+                date,
+                name,
+                aadhar,
+                mobile,
+                numberOfPassengers: Number(numberOfPassengers),
+                totalAmount: Number(totalAmount),
+                advance: Number(advance),
+                remainingAmount,
+            }
+        );
+        res.redirect('/admin');
+    } catch (error) {
+        console.error(error);
+        res.send("Error updating booking.");
+    }
+});
+
+// Handle Logout
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.redirect('/admin'); // Redirect back to admin if there was an error
+        }
+        res.redirect('/'); // Redirect to home after logout
+    });
 });
 
 // Start server
