@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Slip</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow: auto;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            line-height: 1.4;
+            white-space: pre-wrap; /* Allows wrapping in pre */
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db; /* Button color */
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mata Vaishno Devi Public Charitable Trust</h1>
+        <h2>Payment Slip</h2>
+        <pre>
+            Booking ID: <%= booking.bookingId %>
+            Name: <%= booking.name %>
+            From Station: <%= booking.fromStation %>
+            To Station: <%= booking.toStation %>
+            Travel Class: <%= booking.travelClass %>
+            Date: <%= booking.date %>
+            Total Amount: ₹<%= booking.totalAmount %>
+            Advance Payment: ₹<%= booking.advance %>
+            Remaining Amount: ₹<%= booking.remainingAmount %>
+        </pre>
+        <button onclick="window.print()">Print Payment Slip</button>
+    </div>
+</body>
+</html>

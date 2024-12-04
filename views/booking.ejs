@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Train Ticket</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 15px;
+            background-color: #3498db; /* Primary button color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9; /* Darker shade on hover */
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            text-align: center;
+            background-color: #e74c3c; /* Back to Home button color */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #c0392b; /* Darker shade on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Book a Train Ticket</h1>
+        <form action="/book" method="post">
+            <label for="fromStation">From Station:</label>
+            <input type="text" name="fromStation" required>
+
+            <label for="toStation">To Station:</label>
+            <input type="text" name="toStation" required>
+
+            <label for="class">Class:</label>
+            <select name="class" required>
+                <option value="AC">AC</option>
+                <option value="Sleeper">Sleeper</option>
+                <option value="General">General</option>
+            </select>
+
+            <label for="date">Date of Travel:</label>
+            <input type="date" name="date" required>
+
+            <label for="name">Name:</label>
+            <input type="text" name="name" required>
+
+            <label for="aadhar">Aadhar:</label>
+            <input type="text" name="aadhar" required>
+
+            <label for="mobile">Mobile Number:</label>
+            <input type="text" name="mobile" required>
+
+            <label for="numberOfPassengers">Number of Passengers:</label>
+            <input type="number" name="numberOfPassengers" min="1" required>
+
+            <label for="advancePayment">Advance Payment (₹):</label>
+            <input type="number" name="advancePayment" min="0" required>
+
+            <button type="submit">Confirm Booking</button>
+        </form>
+        <a href="/" class="button">Back to Home</a>
+    </div>
+</body>
+</html>
