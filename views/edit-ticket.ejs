@@ -103,6 +103,25 @@
             <option value="General" <%= booking.travelClass === 'General' ? 'selected' : '' %>>General</option>
         </select>
 
+        <label for="coachName">Coach Name:</label>
+        <select name="coachName" required>
+            <option value="A1" <%= booking.coachName === 'A1' ? 'selected' : '' %>>A1</option>
+            <option value="A2" <%= booking.coachName === 'A2' ? 'selected' : '' %>>A2</option>
+            <option value="A3" <%= booking.coachName === 'A3' ? 'selected' : '' %>>A3</option>
+            <option value="S1" <%= booking.coachName === 'S1' ? 'selected' : '' %>>S1</option>
+            <option value="S2" <%= booking.coachName === 'S2' ? 'selected' : '' %>>S2</option>
+            <option value="S3" <%= booking.coachName === 'S3' ? 'selected' : '' %>>S3</option>
+            <option value="S4" <%= booking.coachName === 'S4' ? 'selected' : '' %>>S4</option>
+            <option value="S5" <%= booking.coachName === 'S5' ? 'selected' : '' %>>S5</option>
+            <option value="B1" <%= booking.coachName === 'B1' ? 'selected' : '' %>>B1</option>
+            <option value="B2" <%= booking.coachName === 'B2' ? 'selected' : '' %>>B2</option>
+            <option value="B3" <%= booking.coachName === 'B3' ? 'selected' : '' %>>B3</option>
+            <option value="SLR" <%= booking.coachName === 'SLR' ? 'selected' : '' %>>SLR</option>
+        </select>
+
+        <label for="seatNumber">Seat Number:</label>
+        <input type="text" name="seatNumber" value="<%= booking.seatNumber %>" required>
+
         <label for="date">Date:</label>
         <input type="date" name="date" value="<%= booking.date %>" required>
 
@@ -123,6 +142,9 @@
 
         <label for="advance">Advance Payment:</label>
         <input type="number" name="advance" value="<%= booking.advance %>" required>
+
+        <label for="discount">Discount:</label>
+        <input type="number" name="discount" value="<%= booking.discount %>" placeholder="Enter discount amount if any">
 
         <input type="submit" value="Update Booking">
     </form>

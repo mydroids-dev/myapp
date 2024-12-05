@@ -13,8 +13,8 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -24,14 +24,18 @@
 
         h1 {
             margin-bottom: 20px;
-            color: #2c3e50;
+            color: #34495e;
             font-size: 2.5em;
+            text-align: center;
         }
 
         h2 {
-            margin: 10px 0;
+            margin: 20px 0;
             color: #34495e;
-            font-size: 1.5em;
+            font-size: 1.8em;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
         }
 
         .button {
@@ -42,15 +46,14 @@
             text-decoration: none;
             border-radius: 5px;
             transition: background-color 0.3s ease;
-            margin: 20px 0;
             font-size: 1em;
+            margin: 10px 0;
         }
 
         .button:hover {
-            background-color: #2980b9;
+            background-color: #d44d0c;
         }
 
-        /* Navigation Styles */
         .topnav {
             overflow: hidden;
             background-color: #2c3e50;
@@ -68,26 +71,23 @@
             padding: 14px 16px;
             text-decoration: none;
             transition: background-color 0.3s ease;
+            font-weight: 600;
         }
 
         .topnav a:hover {
-            background-color: #3498db;
+            background-color: #2980b9;
         }
 
         .topnav .icon {
             display: none;
         }
 
-        /* Responsive Styles */
         @media screen and (max-width: 600px) {
             .topnav a { display: none; }
             .topnav .icon {
                 float: right;
                 display: block;
             }
-        }
-
-        @media screen and (max-width: 600px) {
             .topnav.responsive { position: relative; }
             .topnav.responsive .icon {
                 position: absolute;
@@ -101,7 +101,6 @@
             }
         }
 
-        /* Additional Styles */
         ul {
             list-style-type: none;
             padding: 0;
@@ -121,18 +120,11 @@
             align-items: center;
         }
 
-        canvas {
-            margin-top: 30px;
-            border: 1px solid #ccc;
-            width: 100%;
-            max-width: 600px;
-        }
-
         .stats-container {
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
             width: 100%;
             max-width: 600px;
@@ -153,19 +145,29 @@
             border-radius: 5px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .stat:hover {
+            transform: scale(1.05);
         }
 
         .stat span {
             display: block;
             font-size: 1.2em;
             color: #34495e;
+            font-weight: 600;
+        }
+
+        .stat strong {
+            font-size: 1.5em;
+            color: #e6520d;
         }
     </style>
 </head>
 <body>
     <h1>Admin Panel</h1>
 
-    <!-- Top Navigation Menu -->
     <div class="topnav" id="myTopnav">
         <a href="/admin">Home</a>
         <a href="/admin/booking">Book Ticket</a>
@@ -194,6 +196,10 @@
                 <span>Total Remaining Amount:</span>
                 <strong>₹<%= totalRemaining %></strong>
             </div>
+            <div class="stat">
+                <span>Total Discount:</span>
+                <strong>₹<%= totalDiscount %></strong>
+            </div>
         </div>
     </div>
 
@@ -205,68 +211,22 @@
             <li>
                 <div>
                     <strong>ID:</strong> <%= booking.bookingId %> | 
-                    <strong>Name:</strong> <%= booking.name %> | 
                     <strong>Remaining Amount:</strong> ₹<%= booking.remainingAmount %>
                 </div>
                 <div>
                     <form action="/admin/pay/<%= booking.bookingId %>" method="post" style="display:inline;">
-                        <button type="submit" class="button" style="padding: 5px 10px;">Mark as Paid</button>
+                        <button type="submit" class="button" style="padding: 5px 10px; font-size: 0.9em;">Mark as Paid</button>
                     </form>
-                    <!-- This link allows the admin to edit a specific booking based on its bookingId -->
-                   <!-- <a href="/admin/edit/<%= booking.bookingId %>" class="button" style="padding: 5px 10px;">Edit</a> -->
-                    <a href="/slip/<%= booking.bookingId %>" class="button" style="padding: 5px 10px;">View Payment Slip</a>
+                    <a href="/slip/<%= booking.bookingId %>" class="button" style="padding: 5px 10px; font-size: 0.9em;">View Payment Slip</a>
                 </div>
             </li>
         <% }) %>
     </ul>
 
-    <script src="/chart.min.js"></script>
     <script>
-        const ctx = document.getElementById('bookingChart').getContext('2d');
-
-        fetch('/admin/bookings-data')
-            .then(response => response.json())
-            .then(data => {
-                const labels = data.map(b => b.bookingId);
-                const amounts = data.map(b => b.totalAmount);
-                const remaining = data.map(b => b.remainingAmount);
-
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Total Amount',
-                            data: amounts,
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Remaining Amount',
-                            data: remaining,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
-                });
-            });
-
         function toggleFunction() {
             var x = document.getElementById("myTopnav");
-            if (x.className === "topnav") {
-                x.className += " responsive";
-            } else {
-                x.className = "topnav";
-            }
+            x.classList.toggle("responsive");
         }
     </script>
 </body>

@@ -5,98 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Slip</title>
     <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        @media print {
-            body {
-                margin: 0; /* Remove margin for print */
-                padding: 0;
-                font-size: 12pt; /* Adjust font size for print */
-            }
-            button, a {
-                display: none; /* Hide buttons and links when printing */
-            }
-        }
-
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eaeaea;
             color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-            overflow: hidden; /* Prevent overflow for better print layout */
         }
 
         .container {
-            background: white;
+            background: linear-gradient(135deg, #ffffff 30%, #f8f9fa 70%);
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             text-align: left;
             width: 100%;
-            max-width: 600px; /* Set max width for larger screens */
+            max-width: 800px;
+            margin: auto;
         }
 
         h1 {
-            font-size: 2em;
+            font-size: 2.5em; 
             margin-bottom: 10px;
-            color: #2c3e50;
-            text-align: center; /* Centering the main title */
+            color: #2980b9;
+            text-align: center; 
         }
 
         h2 {
-            font-size: 1.5em;
+            font-size: 1.8em;
             margin-bottom: 20px;
-            color: #34495e;
-            text-align: center; /* Centering the subtitle */
+            color: #27ae60;
+            text-align: center;
         }
 
         pre {
-            background: #f8f9fa;
+            background: #f1f1f1;
             padding: 15px;
             border-radius: 5px;
             overflow: auto;
             margin-bottom: 20px;
             font-size: 1.1em;
             line-height: 1.4;
-            white-space: pre-wrap; /* Allows wrapping in pre */
+            white-space: pre-wrap; 
+            border-left: 6px solid #3498db; 
         }
 
         button {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
-            background-color: #3498db; /* Button color */
+            background-color: #e67e22; 
             color: white;
             font-size: 1em;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            width: 100%; /* Full-width button design */
-            text-align: center; /* Center button text */
+            margin-top: 20px;
+            display: block; 
+            width: 100%; 
         }
 
         button:hover {
-            background-color: #2980b9; /* Darker shade on hover */
+            background-color: #d35400; 
+        }
+
+        .passenger-details {
+            margin-top: 20px;
+            border-top: 2px solid #3498db; 
+            padding-top: 10px;
+        }
+
+        .passenger {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #27ae60; 
         }
 
         a {
-            display: block; /* Block level for consistent layout */
-            text-align: center; /* Center the link */
-            margin-top: 20px;
-            font-size: 16px;
-            color: #3498db; /* Link color */
-            text-decoration: none; /* No underline */
+            display: block; 
+            text-align: center;
+            text-decoration: none;
+            color: #2980b9; 
+            margin-top: 10px; 
+            font-weight: bold;
         }
 
         a:hover {
-            text-decoration: underline; /* Underline on hover for clarity */
+            text-decoration: underline; 
+        }
+
+        /* Print styles */
+        @media print {
+            button, a {
+                display: none; 
+            }
         }
     </style>
 </head>
@@ -106,15 +118,31 @@
         <h2>Payment Slip</h2>
         <pre>
             Booking ID: <%= booking.bookingId %>
-            Name: <%= booking.name %>
             From Station: <%= booking.fromStation %>
             To Station: <%= booking.toStation %>
             Travel Class: <%= booking.travelClass %>
+            Birth Type: <%= booking.birthType %>  <!-- Added Birth Type -->
+            Coach Name: <%= booking.coachName %>  <!-- Added Coach Name -->
+            Seat Number: <%= booking.seatNumber %>  <!-- Added Seat Number -->
             Date: <%= booking.date %>
             Total Amount: ₹<%= booking.totalAmount %>
             Advance Payment: ₹<%= booking.advance %>
             Remaining Amount: ₹<%= booking.remainingAmount %>
+            Discount: ₹<%= booking.discount %>
         </pre>
+        
+        <div class="passenger-details">
+            <h3>Passenger Information</h3>
+            <% booking.passengers.forEach(passenger => { %>
+                <div class="passenger">
+                    <strong>Name:</strong> <%= passenger.name %>, 
+                    <strong>Aadhar:</strong> <%= passenger.aadhar %>, 
+                    <strong>Mobile:</strong> <%= passenger.mobile %>, 
+                    <strong>Age:</strong> <%= passenger.age %>
+                </div>
+            <% }); %>
+        </div>
+
         <button onclick="window.print()">Print Payment Slip</button>
         <a href="/admin">Home</a>
     </div>

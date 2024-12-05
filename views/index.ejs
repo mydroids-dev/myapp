@@ -12,22 +12,25 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: url('bg.jpeg') no-repeat center center fixed; /* Background image for the body */
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: url('bg.jpeg') no-repeat center center fixed;
             background-size: cover;
             color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            padding: 20px; /* Added padding for smaller screens */
         }
 
         .container {
             text-align: center;
-            background: rgba(255, 255, 255, 0.9); /* White background with transparency */
+            background: rgba(255, 255, 255, 0.7); /* Lower opacity for transparency effect */
             padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-radius: 10px; /* Slightly larger border radius */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25); /* Deeper shadow for a more elevated effect */
+            max-width: 600px; /* Fixed max-width for better layout */
+            width: 100%; /* Full width on smaller screens */
         }
 
         h1 {
@@ -40,12 +43,14 @@
             margin-bottom: 30px;
             font-size: 1.2em;
             color: #7f8c8d;
+            line-height: 1.5; /* Improved line height for readability */
         }
 
         .button-container {
             display: flex;
             justify-content: center;
             gap: 20px;
+            flex-wrap: wrap; /* Allow buttons to wrap on small screens */
         }
 
         .button, .button.secondary {
@@ -56,6 +61,8 @@
             border-radius: 5px;
             transition: background-color 0.3s ease;
             font-size: 1em;
+            font-weight: bold; /* Bold text for buttons */
+            border: none; /* Ensuring no border */
         }
 
         .button {
@@ -74,8 +81,25 @@
             background-color: #c0392b; /* Darker shade on hover */
         }
 
-        
+        .station-board {
+            margin-top: 20px; /* Space above the station updates section */
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8); /* Light background for visibility */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Subtle shadow */
+        }
 
+        .station-board h2 {
+            margin-bottom: 10px; /* Space below the heading */
+            font-size: 1.5em; /* Slightly larger for emphasis */
+            color: #2c3e50;
+        }
+
+        .station-board p {
+            font-size: 1em;
+            color: #34495e; /* Darker text for better visibility */
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>

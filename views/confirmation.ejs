@@ -8,11 +8,11 @@
         @media print {
             body {
                 margin: 0;
-                padding: 20px; /* Ensures that the print area has some padding */
+                padding: 20px;
                 font-size: 12pt;
             }
-            a, button {
-                display: none; /* Hide links and buttons in print */
+            button, a {
+                display: none; 
             }
             .print-container {
                 page-break-after: always;
@@ -20,20 +20,20 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eaeaea;
             color: #333;
             padding: 20px;
         }
 
         .print-container {
-            background-color: #ffffff;
+            background-color: #FFFFFF;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 8px;
             padding: 20px;
             max-width: 800px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin: 0 auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         h1 {
@@ -50,19 +50,19 @@
 
         .info-label {
             font-weight: bold;
-            color: #34495e; /* A darker shade for better readability */
+            color: #34495e; 
         }
 
         .footer {
             text-align: center;
             margin-top: 20px;
             font-size: 10pt;
-            color: #7f8c8d; /* A subtle color for footer text */
+            color: #7f8c8d; 
         }
 
         button {
             padding: 10px 20px;
-            background-color: #2ecc71; /* Green background */
+            background-color: #2ecc71; 
             color: white;
             border: none;
             border-radius: 5px;
@@ -72,22 +72,36 @@
         }
 
         button:hover {
-            background-color: #27ae60; /* Darker green on hover */
+            background-color: #27ae60; 
         }
 
-        a {
-            text-decoration: none;
-            font-size: 16px;
-            color: #3498db; /* Blue color for the "Home" link */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        a:hover {
-            text-decoration: underline; /* Underline on hover for clarity */
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
     </style>
     <script>
         function printSlip() {
-            window.print(); // Open the print dialog
+            window.print();
         }
     </script>
 </head>
@@ -99,21 +113,48 @@
             <div class="info"><span class="info-label">From Station:</span> <%= reservationDetails.fromStation %></div>
             <div class="info"><span class="info-label">To Station:</span> <%= reservationDetails.toStation %></div>
             <div class="info"><span class="info-label">Travel Class:</span> <%= reservationDetails.travelClass %></div>
+            <div class="info"><span class="info-label">Coach Name:</span> <%= reservationDetails.coachName %></div>
+            <div class="info"><span class="info-label">Seat Number:</span> <%= reservationDetails.seatNumber %></div>
             <div class="info"><span class="info-label">Date of Travel:</span> <%= reservationDetails.date %></div>
-            <div class="info"><span class="info-label">Name:</span> <%= reservationDetails.name %></div>
             <div class="info"><span class="info-label">Aadhar:</span> <%= reservationDetails.aadhar %></div>
             <div class="info"><span class="info-label">Mobile Number:</span> <%= reservationDetails.mobile %></div>
             <div class="info"><span class="info-label">Number of Passengers:</span> <%= reservationDetails.numberOfPassengers %></div>
             <div class="info"><span class="info-label">Total Amount:</span> ₹<%= reservationDetails.totalAmount %></div>
             <div class="info"><span class="info-label">Advance Payment:</span> ₹<%= reservationDetails.advance %></div>
             <div class="info"><span class="info-label">Remaining Amount:</span> ₹<%= reservationDetails.remainingAmount %></div>
+            <div class="info"><span class="info-label">Discount:</span> ₹<%= reservationDetails.discount %></div>
         </div>
+        
+        <h2>Passenger Information</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>S. No.</th>
+                    <th>Name</th>
+                    <th>Aadhar</th>
+                    <th>Mobile</th>
+                    <th>Age</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% reservationDetails.passengers.forEach((passenger, index) => { %>
+                    <tr>
+                        <td><%= index + 1 %></td>
+                        <td><%= passenger.name %></td>
+                        <td><%= passenger.aadhar %></td>
+                        <td><%= passenger.mobile %></td>
+                        <td><%= passenger.age %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+        
         <div class="footer">Thank you for your booking!</div>
     </div>
     <div style="text-align:center; margin-top: 20px;">
         <button onclick="printSlip()">Print Slip</button>
         <br>
-        <a href="/">Home</a>
+        <a href="/admin" class="button">Home</a>
     </div>
 </body>
 </html>
