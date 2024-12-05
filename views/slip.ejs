@@ -121,14 +121,13 @@
             From Station: <%= booking.fromStation %>
             To Station: <%= booking.toStation %>
             Travel Class: <%= booking.travelClass %>
-            Birth Type: <%= booking.birthType %>  <!-- Added Birth Type -->
-            Coach Name: <%= booking.coachName %>  <!-- Added Coach Name -->
-            Seat Number: <%= booking.seatNumber %>  <!-- Added Seat Number -->
-            Date: <%= booking.date %>
-            Total Amount: ₹<%= booking.totalAmount %>
-            Advance Payment: ₹<%= booking.advance %>
-            Remaining Amount: ₹<%= booking.remainingAmount %>
-            Discount: ₹<%= booking.discount %>
+            Coach Name: <%= booking.coachName %>
+            Seat Number: <%= booking.seatNumber %>
+            Travel Date: <%= booking.date.toISOString().split('T')[0] %> <!-- Added Travel Date -->
+            Total Amount: ₹<%= booking.totalAmount.toFixed(2) %>
+            Advance Payment: ₹<%= booking.advance.toFixed(2) %>
+            Discount: ₹<%= booking.discount.toFixed(2) %>
+            Remaining Amount: ₹<%= booking.remainingAmount.toFixed(2) %>
         </pre>
         
         <div class="passenger-details">

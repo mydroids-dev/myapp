@@ -119,10 +119,12 @@
             <div class="info"><span class="info-label">Aadhar:</span> <%= reservationDetails.aadhar %></div>
             <div class="info"><span class="info-label">Mobile Number:</span> <%= reservationDetails.mobile %></div>
             <div class="info"><span class="info-label">Number of Passengers:</span> <%= reservationDetails.numberOfPassengers %></div>
-            <div class="info"><span class="info-label">Total Amount:</span> ₹<%= reservationDetails.totalAmount %></div>
-            <div class="info"><span class="info-label">Advance Payment:</span> ₹<%= reservationDetails.advance %></div>
-            <div class="info"><span class="info-label">Remaining Amount:</span> ₹<%= reservationDetails.remainingAmount %></div>
-            <div class="info"><span class="info-label">Discount:</span> ₹<%= reservationDetails.discount %></div>
+            <div class="info"><span class="info-label">Total Amount:</span> ₹<%= reservationDetails.totalAmount.toFixed(2) %></div>
+            <div class="info"><span class="info-label">Advance Payment:</span> ₹<%= reservationDetails.advance.toFixed(2) %></div>
+            <div class="info"><span class="info-label">Discount:</span> ₹<%= reservationDetails.discount.toFixed(2) %></div>
+            <div class="info"><span class="info-label">Remaining Amount:</span> ₹<%= reservationDetails.remainingAmount.toFixed(2) %></div>
+            <div class="info"><span class="info-label">Booking Date:</span> <%= reservationDetails.createdAt.toISOString().split('T')[0] %></div>
+            <div class="info"><span class="info-label">Booking Time:</span> <%= new Date(reservationDetails.createdAt).toLocaleTimeString() %></div>
         </div>
         
         <h2>Passenger Information</h2>

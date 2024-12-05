@@ -100,20 +100,83 @@
             color: #34495e; /* Darker text for better visibility */
             line-height: 1.5;
         }
+
+        /* Style for the Check Booking form */
+        .check-booking {
+            margin-top: 30px; /* Space above the check booking section */
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9); /* Slightly more opaque for better visibility */
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .check-booking input {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 60%; /* Width of the input box */
+            margin-right: 10px; /* Space between input and button */
+        }
+
+        .check-booking button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #2ecc71; /* Check button color */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .check-booking button:hover {
+            background-color: #27ae60; /* Darker on hover */
+        }
+
+        .hidden {
+            display: none; /* Class to hide elements */
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="clickable-area">
         <h1>Welcome to Mata Vaishno Devi Train Ticketing</h1>
         <p class="description">Effortlessly book your train tickets online. Enjoy a smooth and hassle-free experience.</p>
         <div class="button-container">
-            <a href="/admin/login" class="button secondary">Admin Login</a>
+            <a href="/admin/login" class="button secondary" id="adminLoginBtn" class="hidden">Admin Login</a>
         </div>
+        
+        <!-- Check Booking Section -->
+        <div class="check-booking">
+            <h2>Check Booking Status</h2>
+            <form action="/check-booking" method="POST">
+                <input type="text" name="bookingId" placeholder="Enter Booking ID" required>
+                <button type="submit">Check</button>
+            </form>
+        </div>
+
         <div class="station-board">
             <h2>Latest Station Updates</h2>
             <p>Check for the latest train arrivals and departures.</p>
             <!-- More details can be added here -->
         </div>
     </div>
+
+    <script>
+        let clickCount = 0; // Variable to hold the click count
+        const adminLoginBtn = document.getElementById('adminLoginBtn'); // Get the admin login button
+
+        // Function to handle the click event
+        function handleClick() {
+            clickCount++; // Increment the click count
+            if (clickCount >= 5) { // Check if the count is 5 or more
+                adminLoginBtn.classList.remove('hidden'); // Show the admin login button
+            }
+        }
+
+        // Attach the click event listener to the whole container
+        document.getElementById('clickable-area').addEventListener('click', handleClick);
+    </script>
 </body>
 </html>

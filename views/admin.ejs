@@ -190,20 +190,35 @@
             </div>
             <div class="stat">
                 <span>Total Collection:</span>
-                <strong>₹<%= totalCollection %></strong>
+                <strong>₹<%= totalCollection.toFixed(2) %></strong>
+            </div>
+            <div class="stat">
+                <span>Total Advance Amount:</span>
+                <strong>₹<%= totalAdvance.toFixed(2) %></strong>
             </div>
             <div class="stat">
                 <span>Total Remaining Amount:</span>
-                <strong>₹<%= totalRemaining %></strong>
+                <strong>₹<%= totalRemaining.toFixed(2) %></strong>
             </div>
             <div class="stat">
                 <span>Total Discount:</span>
-                <strong>₹<%= totalDiscount %></strong>
+                <strong>₹<%= totalDiscount.toFixed(2) %></strong>
             </div>
         </div>
     </div>
 
     <a href="/admin/download-excel" class="button">Download Excel</a>
+
+    <h2>Filter Bookings by Date</h2>
+    <form action="/admin/booking-summary" method="post" style="margin-bottom: 30px;">
+        <label for="startDate">From:</label>
+        <input type="date" id="startDate" name="startDate" required>
+        
+        <label for="endDate">To:</label>
+        <input type="date" id="endDate" name="endDate" required>
+        
+        <button type="submit" class="button">Get Summary</button>
+    </form>
 
     <h2>Bookings</h2>
     <ul>
@@ -211,7 +226,7 @@
             <li>
                 <div>
                     <strong>ID:</strong> <%= booking.bookingId %> | 
-                    <strong>Remaining Amount:</strong> ₹<%= booking.remainingAmount %>
+                    <strong>Remaining Amount:</strong> ₹<%= booking.remainingAmount.toFixed(2) %>
                 </div>
                 <div>
                     <form action="/admin/pay/<%= booking.bookingId %>" method="post" style="display:inline;">

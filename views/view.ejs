@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Booking Details</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Link to your CSS -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f5f9; /* Light background color */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #ffffff; /* White text for headings */
+            border-radius: 5px;
+            background-color: #007BFF; /* Header background */
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px; /* Rounded corners for table */
+            overflow: hidden; /* Ensure rounded corners are applied */
+        }
+
+        th, td {
+            padding: 15px;
+            border: none; /* No border on cells for a cleaner look */
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50; /* Dark green for header */
+            color: white;
+            position: relative;
+        }
+
+        th::after {
+            content: '';
+            display: block;
+            height: 4px;
+            background: linear-gradient(to right, #81C784, #4CAF50);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Light grey for even rows */
+        }
+
+        tr:hover {
+            background-color: #e1f5fe; /* Light blue for hover effect */
+        }
+
+        .error {
+            color: #d9534f; /* Error color */
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button {
+            padding: 10px 20px;
+            background-color: #007BFF; /* Blue background */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>View Booking Details</h1>
+
+    <% if (booking) { %>
+        <h2>Booking Details</h2>
+        <table id="bookingTable">
+            <tr>
+                <th>Booking ID</th>
+                <td><%= booking.bookingId %></td>
+            </tr>
+            <tr>
+                <th>Booked By</th>
+                <td><%= booking.bookedBy %></td>
+            </tr>
+            <tr>
+                <th>From Station</th>
+                <td><%= booking.fromStation %></td>
+            </tr>
+            <tr>
+                <th>To Station</th>
+                <td><%= booking.toStation %></td>
+            </tr>
+            <tr>
+                <th>Class</th>
+                <td><%= booking.travelClass %></td>
+            </tr>
+            <tr>
+                <th>Coach Name</th>
+                <td><%= booking.coachName %></td>
+            </tr>
+            <tr>
+                <th>Seat Number</th>
+                <td><%= booking.seatNumber %></td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td><%= booking.date %></td>
+            </tr>
+            <tr>
+                <th>Mobile</th>
+                <td><%= booking.mobile %></td>
+            </tr>
+            <tr>
+                <th>Total Amount</th>
+                <td>₹<%= booking.totalAmount.toFixed(2) %></td>
+            </tr>
+            <tr>
+                <th>Advance Payment</th>
+                <td>₹<%= booking.advance.toFixed(2) %></td>
+            </tr>
+            <tr>
+                <th>Discount</th>
+                <td>₹<%= booking.discount.toFixed(2) %></td>
+            </tr>
+            <tr>
+                <th>Remaining Amount</th>
+                <td>₹<%= booking.remainingAmount.toFixed(2) %></td>
+            </tr>
+        </table>
+
+        <div class="button-container">
+            <a href="/" class="back-button">Back</a>
+        </div>
+
+    <% } else if (error) { %>
+        <h3 class="error"><%= error %></h3>
+    <% } %>
+
+</body>
+
+</html>

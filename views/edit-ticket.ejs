@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,8 +84,16 @@
             color: #357ABD;
         }
     </style>
+    <script>
+        function calculateRemainingAmount() {
+            const totalAmount = parseFloat(document.getElementById('totalAmount').value) || 0;
+            const advance = parseFloat(document.getElementById('advance').value) || 0;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+            const remainingAmount = totalAmount - (advance + discount);
+            document.getElementById('remainingAmount').value = remainingAmount.toFixed(2);
+        }
+    </script>
 </head>
-
 <body>
     <h1>Edit Booking</h1>
     <form action="/admin/edit/<%= booking.bookingId %>" method="post">
@@ -123,32 +130,25 @@
         <input type="text" name="seatNumber" value="<%= booking.seatNumber %>" required>
 
         <label for="date">Date:</label>
-        <input type="date" name="date" value="<%= booking.date %>" required>
-
-        <label for="name">Name:</label>
-        <input type="text" name="name" value="<%= booking.name %>" required>
-
-        <label for="aadhar">Aadhar:</label>
-        <input type="text" name="aadhar" value="<%= booking.aadhar %>" required>
-
-        <label for="mobile">Mobile:</label>
-        <input type="text" name="mobile" value="<%= booking.mobile %>" required>
+        <input type="date" name="date" value="<%= booking.date.toISOString().split('T')[0] %>" required>
 
         <label for="numberOfPassengers">Number of Passengers:</label>
         <input type="number" name="numberOfPassengers" value="<%= booking.numberOfPassengers %>" required>
 
         <label for="totalAmount">Total Amount:</label>
-        <input type="number" name="totalAmount" value="<%= booking.totalAmount %>" required>
+        <input type="number" id="totalAmount" name="totalAmount" value="<%= booking.totalAmount %>" required oninput="calculateRemainingAmount()">
 
         <label for="advance">Advance Payment:</label>
-        <input type="number" name="advance" value="<%= booking.advance %>" required>
+        <input type="number" id="advance" name="advance" value="<%= booking.advance %>" required oninput="calculateRemainingAmount()">
 
         <label for="discount">Discount:</label>
-        <input type="number" name="discount" value="<%= booking.discount %>" placeholder="Enter discount amount if any">
+        <input type="number" id="discount" name="discount" value="<%= booking.discount %>" placeholder="Enter discount amount if any" oninput="calculateRemainingAmount()">
+
+        <label for="remainingAmount">Remaining Amount:</label>
+        <input type="number" id="remainingAmount" name="remainingAmount" value="<%= booking.remainingAmount %>" readonly>
 
         <input type="submit" value="Update Booking">
     </form>
     <a href="/admin">Cancel</a>
 </body>
-
 </html>

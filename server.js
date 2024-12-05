@@ -5,6 +5,7 @@ const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -24,8 +25,8 @@ const bookingSchema = new mongoose.Schema({
     travelClass: String,
     coachName: String,
     seatNumber: String,
-    date: String,
-    name: String,
+    date: { type: Date, default: Date.now }, // Date when the booking is made
+    bookedBy: String,
     aadhar: String,
     mobile: String,
     numberOfPassengers: Number,
@@ -33,6 +34,7 @@ const bookingSchema = new mongoose.Schema({
     advance: Number,
     remainingAmount: Number,
     discount: { type: Number, default: 0 },
+    createdAt: { type: Date, default: Date.now }, // Current date and time when booking is created
     passengers: [{ name: String, aadhar: String, mobile: String, age: Number }]
 });
 
@@ -56,7 +58,7 @@ app.use(session({
     saveUninitialized: true
 }));
 
-let bookingId = 1;
+let bookingId = 1; // Variable to generate booking IDs
 
 // Admin Registration Route
 app.get('/admin/register', (req, res) => {
@@ -75,6 +77,27 @@ app.post('/admin/register', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.send("Error: Username may already exist.");
+    }
+});
+
+// Route to display the booking view page
+app.get('/view', (req, res) => {
+    res.render('view', { booking: null, error: null });
+});
+
+// Route to handle checking booking status
+app.post('/check-booking', async (req, res) => {
+    const { bookingId } = req.body;
+    try {
+        const booking = await Booking.findOne({ bookingId });
+        if (booking) {
+            res.render('view', { booking, error: null });
+        } else {
+            res.render('view', { booking: null, error: 'Booking not found.' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.render('view', { booking: null, error: 'Error fetching booking details.' });
     }
 });
 
@@ -115,11 +138,13 @@ app.get('/admin', checkAdmin, async (req, res) => {
     const bookings = await Booking.find();
     const totalBookings = bookings.length;
     const today = new Date().toISOString().split('T')[0];
-    const todayBookings = bookings.filter(b => b.date === today);
+    const todayBookings = bookings.filter(b => b.date.toISOString().split('T')[0] === today);
 
     const totalCollection = bookings.reduce((total, b) => total + b.totalAmount, 0);
     const totalDiscount = bookings.reduce((total, b) => total + b.discount, 0);
     const totalRemaining = bookings.reduce((total, b) => total + b.remainingAmount, 0);
+    
+    const totalAdvance = bookings.reduce((total, b) => total + b.advance, 0);
 
     res.render('admin', {
         totalBookings,
@@ -127,8 +152,52 @@ app.get('/admin', checkAdmin, async (req, res) => {
         totalCollection,
         totalDiscount,
         totalRemaining,
+        totalAdvance,
         bookings
     });
+});
+
+// Get Daily Booking Summary
+app.post('/admin/booking-summary', checkAdmin, async (req, res) => {
+    const { startDate, endDate } = req.body; 
+    try {
+        const bookings = await Booking.find({
+            createdAt: {
+                $gte: new Date(startDate),
+                $lte: new Date(endDate)
+            }
+        });
+
+        const dailySummary = {};
+
+        bookings.forEach(booking => {
+            const bookingDate = booking.createdAt.toISOString().split('T')[0];
+            const bookingTime = booking.createdAt.toTimeString().split(' ')[0];
+
+            if (!dailySummary[bookingDate]) {
+                dailySummary[bookingDate] = {
+                    totalBookings: 0,
+                    totalAmount: 0,
+                    totalAdvance: 0,
+                    totalRemaining: 0,
+                    time: bookingTime 
+                };
+            }
+            dailySummary[bookingDate].totalBookings += 1;
+            dailySummary[bookingDate].totalAmount += booking.totalAmount;
+            dailySummary[bookingDate].totalAdvance += booking.advance;
+            dailySummary[bookingDate].totalRemaining += booking.remainingAmount;
+        });
+
+        res.render('booking-summary', {
+            dailySummary: dailySummary,
+            startDate,
+            endDate
+        });
+    } catch (error) {
+        console.error(error);
+        res.send('Error fetching booking summary');
+    }
 });
 
 // Download Excel with Booking Details
@@ -145,7 +214,7 @@ app.get('/admin/download-excel', checkAdmin, async (req, res) => {
         { header: 'Coach Name', key: 'coachName' },
         { header: 'Seat Number', key: 'seatNumber' },
         { header: 'Date', key: 'date' },
-        { header: 'Name', key: 'name' },
+        { header: 'Booked By', key: 'bookedBy' },
         { header: 'Aadhar', key: 'aadhar' },
         { header: 'Mobile', key: 'mobile' },
         { header: 'Passengers', key: 'numberOfPassengers' },
@@ -153,6 +222,7 @@ app.get('/admin/download-excel', checkAdmin, async (req, res) => {
         { header: 'Advance Payment', key: 'advance' },
         { header: 'Remaining Amount', key: 'remainingAmount' },
         { header: 'Discount', key: 'discount' },
+        { header: 'Created At', key: 'createdAt' },
     ];
 
     bookings.forEach(booking => {
@@ -166,24 +236,33 @@ app.get('/admin/download-excel', checkAdmin, async (req, res) => {
     res.end();
 });
 
-// Modify booking submission route to include passenger information
+// Booking submission route
 app.post('/book', async (req, res) => {
-    const { fromStation, toStation, class: travelClass, coachName, seatNumber, date, name, aadhar, mobile, numberOfPassengers, advancePayment, discount, passengerName, passengerAge, passengerAadhar, passengerMobile } = req.body;
+    const {
+        fromStation, toStation,
+        class: travelClass, coachName,
+        seatNumber, date, bookedBy,
+        aadhar, mobile, numberOfPassengers,
+        advancePayment, discount,
+        
+        // Assuming passed as array
+        passengerName, passengerAge,
+        passengerAadhar, passengerMobile
+    } = req.body;
 
-    const prices = { AC: 3500, Sleeper: 25000, General: 1500 };
+    const prices = { AC: 4000, Sleeper: 3000, General: 2000 };
     const totalAmount = prices[travelClass] * numberOfPassengers;
 
     const discountAmount = parseFloat(discount) || 0;
-    const discountedAmount = totalAmount - discountAmount;
     const advance = parseFloat(advancePayment) || 0;
-    const remainingAmount = discountedAmount - advance;
 
-    // Create an array of passengers with their details
+    const remainingAmount = totalAmount - (advance + discountAmount);
+
     const passengers = passengerName.map((name, index) => ({
         name,
-        aadhar: passengerAadhar[index],  
-        mobile: passengerMobile[index],  
-        age: passengerAge[index]  
+        aadhar: passengerAadhar[index],
+        mobile: passengerMobile[index],
+        age: passengerAge[index]
     }));
 
     const reservationDetails = {
@@ -194,21 +273,21 @@ app.post('/book', async (req, res) => {
         coachName,
         seatNumber,
         date,
-        name,
+        bookedBy,
         aadhar,
         mobile,
         numberOfPassengers,
-        totalAmount: discountedAmount,
+        totalAmount,
         advance,
         remainingAmount,
         discount: discountAmount,
+        createdAt: new Date(),
         passengers
     };
 
     const newBooking = new Booking(reservationDetails);
     await newBooking.save();
 
-    // Render the confirmation page with reservation details
     res.render('confirmation', { reservationDetails });
 });
 
@@ -236,13 +315,15 @@ app.get('/payment-slip/:id', checkAdmin, async (req, res) => {
         doc.pipe(res);
         doc.fontSize(16).text('Payment Slip', { underline: true });
         doc.text(`Booking ID: ${booking.bookingId}`);
-        doc.text(`Name: ${booking.name}`);
+        doc.text(`Booked By: ${booking.bookedBy}`);
         doc.text(`From Station: ${booking.fromStation}`);
         doc.text(`To Station: ${booking.toStation}`);
-        doc.text(`Total Amount After Discount: ₹${booking.totalAmount}`);
+        doc.text(`Total Amount: ₹${booking.totalAmount}`);
         doc.text(`Advance Payment: ₹${booking.advance}`);
         doc.text(`Remaining Amount: ₹${booking.remainingAmount}`);
         doc.text(`Discount Applied: ₹${booking.discount}`);
+        doc.text(`Booking Date: ${booking.createdAt.toISOString().split('T')[0]}`);
+        doc.text(`Booking Time: ${booking.createdAt.toTimeString().split(' ')[0]}`);
         doc.end();
     } else {
         res.send("Booking not found.");
@@ -281,8 +362,15 @@ app.get('/admin/edit/:id', checkAdmin, async (req, res) => {
 
 // Admin Edit Booking - POST
 app.post('/admin/edit/:id', checkAdmin, async (req, res) => {
-    const { fromStation, toStation, class: travelClass, coachName, seatNumber, date, name, aadhar, mobile, numberOfPassengers, totalAmount, advance, discount } = req.body;
-    const remainingAmount = totalAmount - advance;
+    const {
+        fromStation, toStation,
+        class: travelClass, coachName,
+        seatNumber, date, bookedBy,
+        aadhar, mobile, numberOfPassengers,
+        totalAmount, advance, discount
+    } = req.body;
+
+    const remainingAmount = totalAmount - (advance + discount);
 
     try {
         await Booking.updateOne(
@@ -294,7 +382,7 @@ app.post('/admin/edit/:id', checkAdmin, async (req, res) => {
                 coachName,
                 seatNumber,
                 date,
-                name,
+                bookedBy,
                 aadhar,
                 mobile,
                 numberOfPassengers: Number(numberOfPassengers),
@@ -323,5 +411,5 @@ app.get('/logout', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`); 
+    console.log(`Server is running on http://localhost:${PORT}`);
 });

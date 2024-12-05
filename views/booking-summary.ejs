@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Summary from <%= startDate %> to <%= endDate %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        h2 {
+            color: #007bff;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        table, th, td {
+            border: 1px solid #dee2e6;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e9ecef;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            color: white;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        @media print {
+            .button {
+                display: none;
+            }
+        }
+
+        .total-row {
+            font-weight: bold;
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <h2>Booking Summary from <%= startDate %> to <%= endDate %></h2>
+
+    <% 
+    let totalBookings = 0;
+    let totalAmount = 0;
+    let totalAdvance = 0;
+    let totalRemaining = 0;
+
+    if (Object.keys(dailySummary).length === 0) { 
+    %>
+        <p style="text-align: center;">No bookings found for this date range.</p>
+    <% 
+    } else { 
+        for (const date in dailySummary) {
+            totalBookings += dailySummary[date].totalBookings;
+            totalAmount += dailySummary[date].totalAmount;
+            totalAdvance += dailySummary[date].totalAdvance;
+            totalRemaining += dailySummary[date].totalRemaining;
+        }
+    %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Total Bookings</th>
+                    <th>Total Amount (₹)</th>
+                    <th>Total Advance (₹)</th>
+                    <th>Total Remaining (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (const date in dailySummary) { %>
+                    <tr>
+                        <td><%= date %></td>
+                        <td><%= dailySummary[date].time %></td>
+                        <td><%= dailySummary[date].totalBookings %></td>
+                        <td>₹<%= dailySummary[date].totalAmount.toFixed(2) %></td>
+                        <td>₹<%= dailySummary[date].totalAdvance.toFixed(2) %></td>
+                        <td>₹<%= dailySummary[date].totalRemaining.toFixed(2) %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="2">Total:</td>
+                    <td><%= totalBookings %></td>
+                    <td>₹<%= totalAmount.toFixed(2) %></td>
+                    <td>₹<%= totalAdvance.toFixed(2) %></td>
+                    <td>₹<%= totalRemaining.toFixed(2) %></td>
+                </tr>
+            </tfoot>
+        </table>
+    <% } %>
+
+    <div style="text-align: center;">
+        <button class="button" onclick="printSummary()">Print Summary</button>
+        <a href="/admin" class="button">Back to Admin Panel</a>
+    </div>
+
+    <script>
+        function printSummary() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

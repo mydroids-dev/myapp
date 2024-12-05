@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +33,7 @@
         }
 
         h1 {
-            font-size: 2em; 
+            font-size: 2em;
             margin-bottom: 20px;
             color: #2c3e50;
             text-align: center;
@@ -50,7 +51,8 @@
             color: #2c3e50;
         }
 
-        input, select {
+        input,
+        select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -59,7 +61,8 @@
             transition: border-color 0.3s ease;
         }
 
-        input:focus, select:focus {
+        input:focus,
+        select:focus {
             border-color: #3498db;
             outline: none;
         }
@@ -93,10 +96,19 @@
             margin-bottom: 20px;
         }
 
+        .passenger-divider {
+            height: 2px; /* Adjust thickness */
+            background-color: #333; /* Darker color for the line */
+            margin: 10px 0; /* Space around the divider */
+        }
+
         .add-passenger-btn {
             margin-top: 10px;
             background-color: #e6520d;
             width: auto;
+            color: white;
+            cursor: pointer;
+            border: none;
         }
 
         .add-passenger-btn:hover {
@@ -117,10 +129,14 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Book a Train Ticket</h1>
         <form action="/book" method="post">
+            <label for="bookedBy">Booked By:</label>
+            <input type="text" name="bookedBy" required placeholder="Enter your name">
+
             <label for="fromStation">From Station:</label>
             <input type="text" name="fromStation" required>
 
@@ -128,12 +144,10 @@
             <select name="toStation" required>
                 <option value="">Select a Station</option>
                 <option value="Vaishno Devi Katra Railway Station (SVDK)">Vaishno Devi Katra Railway Station (SVDK)</option>
-                <!-- Add more stations as needed -->
                 <option value="Delhi">Delhi</option>
                 <option value="Mumbai">Mumbai</option>
                 <option value="Chennai">Chennai</option>
                 <option value="Kolkata">Kolkata</option>
-                <!-- Add additional stations here -->
             </select>
 
             <label for="class">Class:</label>
@@ -199,6 +213,7 @@
                         <label for="passengerMobile1">Mobile:</label>
                         <input type="text" name="passengerMobile[]" required>
                     </div>
+                    <div class="passenger-divider"></div> <!-- Dark line separator -->
                 </div>
                 <button type="button" id="addPassenger" class="add-passenger-btn">Add Another Passenger</button>
             </div>
@@ -221,7 +236,7 @@
 
         document.getElementById('addPassenger').addEventListener('click', function() {
             const passengerContainer = document.getElementById('passengerContainer');
-            const passengerCount = passengerContainer.children.length + 1;
+            const passengerCount = passengerContainer.children.length / 2 + 1; // Incrementing the count
 
             const newPassenger = document.createElement('div');
             newPassenger.className = 'passenger';
@@ -236,8 +251,13 @@
                 <input type="text" name="passengerMobile[]" required>
             `;
 
+            const divider = document.createElement('div');
+            divider.className = 'passenger-divider'; // Dark line separator
+
             passengerContainer.appendChild(newPassenger);
+            passengerContainer.appendChild(divider); // Adding the line after each passenger
         });
     </script>
 </body>
+
 </html>
