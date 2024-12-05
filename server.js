@@ -187,7 +187,7 @@ app.post('/book', async (req, res) => {
     }));
 
     const reservationDetails = {
-        bookingId: `MBDB/24/${String(bookingId++).padStart(5, '0')}`,
+        bookingId: `MBDB${String(bookingId++).padStart(5, '0')}`,
         fromStation,
         toStation,
         travelClass,
