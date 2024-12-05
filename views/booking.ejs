@@ -125,7 +125,16 @@
             <input type="text" name="fromStation" required>
 
             <label for="toStation">To Station:</label>
-            <input type="text" name="toStation" required>
+            <select name="toStation" required>
+                <option value="">Select a Station</option>
+                <option value="Vaishno Devi Katra Railway Station (SVDK)">Vaishno Devi Katra Railway Station (SVDK)</option>
+                <!-- Add more stations as needed -->
+                <option value="Delhi">Delhi</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Kolkata">Kolkata</option>
+                <!-- Add additional stations here -->
+            </select>
 
             <label for="class">Class:</label>
             <select name="class" id="class" required>
