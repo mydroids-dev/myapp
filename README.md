@@ -1,5 +1,3 @@
-// Train Ticket Booking System Readme
-
 This Train Ticket Booking System is a Node.js application that allows users to book train tickets, view booking details, and generate reports. 
 
 ### Technologies Used
