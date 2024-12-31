@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book a Train Ticket</title>
     <style>
-        /* Reset CSS */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -30,7 +29,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 800px;
+            max-width: 600px;
         }
 
         h1 {
@@ -48,6 +47,7 @@
 
         label {
             font-weight: bold;
+            margin-bottom: 5px;
             color: #2c3e50;
         }
 
@@ -97,24 +97,18 @@
         }
 
         .passenger-divider {
-            height: 2px;
-            background-color: #333;
-            margin: 10px 0;
-        }
-
-        .add-passenger-btn,
-        .back-button {
-            margin-top: 20px;
-            color: white;
-            cursor: pointer;
-            border: none;
-            display: block;
-            text-align: center;
-            font-weight: bold;
+            height: 2px; /* Adjust thickness */
+            background-color: #333; /* Darker color for the line */
+            margin: 10px 0; /* Space around the divider */
         }
 
         .add-passenger-btn {
+            margin-top: 10px;
             background-color: #e6520d;
+            width: auto;
+            color: white;
+            cursor: pointer;
+            border: none;
         }
 
         .add-passenger-btn:hover {
@@ -122,57 +116,16 @@
         }
 
         .back-button {
-            background-color: transparent;
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
             color: #3498db;
         }
 
         .back-button:hover {
             text-decoration: underline;
-        }
-
-        #seatLayout {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .seat {
-            width: 40px;
-            height: 40px;
-            margin: 5px;
-            text-align: center;
-            line-height: 40px;
-            border: 2px solid #3498db;
-            border-radius: 5px;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.3s;
-        }
-
-        .seat.available:hover {
-            background-color: #e1f5fe;
-        }
-
-        .seat.selected {
-            background-color: #26a69a;
-            color: white;
-        }
-
-        .seat.booked {
-            background-color: #ef5350;
-            color: white;
-            cursor: not-allowed;
-        }
-
-        .seat-row {
-            display: flex;
-            justify-content: center;
-        }
-
-        .full {
-            text-align: center;
-            margin: 10px 0;
-            font-weight: bold;
-            color: #ef5350;
         }
     </style>
 </head>
@@ -182,14 +135,14 @@
         <h1>Book a Train Ticket</h1>
         <form action="/book" method="post">
             <label for="bookedBy">Booked By:</label>
-            <input type="text" name="bookedBy" id="bookedBy" required placeholder="Enter your name">
+            <input type="text" name="bookedBy" required placeholder="Enter your name">
 
             <label for="fromStation">From Station:</label>
-            <input type="text" name="fromStation" id="fromStation" required>
+            <input type="text" name="fromStation" required>
 
             <label for="toStation">To Station:</label>
-            <select name="toStation" id="toStation" required>
-                <option value="" disabled selected>Select a Station</option>
+            <select name="toStation" required>
+                <option value="">Select a Station</option>
                 <option value="Vaishno Devi Katra Railway Station (SVDK)">Vaishno Devi Katra Railway Station (SVDK)</option>
                 <option value="Delhi">Delhi</option>
                 <option value="Mumbai">Mumbai</option>
@@ -199,56 +152,74 @@
 
             <label for="class">Class:</label>
             <select name="class" id="class" required>
-                <option value="A">AC</option>
-                <option value="S">Sleeper</option>
-                <option value="B">General</option>
+                <option value="AC">AC</option>
+                <option value="Sleeper">Sleeper</option>
+                <option value="General">General</option>
             </select>
 
-            <label for="coachName">Coach Name:</label>
-            <select name="coachName" id="coachName" required>
-                <option value="" disabled selected>Select a Coach</option>
-            </select>
-
-            <div id="seatLayout">
-                <h3>Select Your Seat</h3>
-                <div id="seatContainer"></div>
+            <div id="birthTypeContainer" class="birth-type">
+                <label for="birthType">Birth Type:</label>
+                <select name="birthType" required>
+                    <option value="Upper">Upper</option>
+                    <option value="Middle">Middle</option>
+                    <option value="Lower">Lower</option>
+                </select>
             </div>
 
+            <label for="coachName">Coach Name:</label>
+            <select name="coachName" required>
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="A3">A3</option>
+                <option value="S1">S1</option>
+                <option value="S2">S2</option>
+                <option value="S3">S3</option>
+                <option value="S4">S4</option>
+                <option value="S5">S5</option>
+                <option value="B1">B1</option>
+                <option value="B2">B2</option>
+                <option value="B3">B3</option>
+                <option value="SLR">SLR</option>
+            </select>
+
+            <label for="seatNumber">Seat Number:</label>
+            <input type="text" name="seatNumber" required>
+
             <label for="date">Date of Travel:</label>
-            <input type="date" name="date" id="date" required>
+            <input type="date" name="date" required>
 
             <label for="aadhar">Aadhar:</label>
-            <input type="text" name="aadhar" id="aadhar" required>
+            <input type="text" name="aadhar" required>
 
             <label for="mobile">Mobile Number:</label>
-            <input type="tel" name="mobile" id="mobile" required>
+            <input type="text" name="mobile" required>
 
             <label for="numberOfPassengers">Number of Passengers:</label>
-            <input type="number" name="numberOfPassengers" id="numberOfPassengers" min="1" required>
+            <input type="number" name="numberOfPassengers" min="1" id="numberOfPassengers" required>
 
             <label for="discount">Discount (Optional):</label>
-            <input type="number" name="discount" id="discount" min="0" placeholder="Enter discount amount">
+            <input type="number" name="discount" min="0" placeholder="Enter discount amount">
 
             <div class="passenger-info">
                 <h2>Passenger Information</h2>
                 <div id="passengerContainer">
                     <div class="passenger" id="passenger1">
                         <label for="passengerName1">Name:</label>
-                        <input type="text" name="passengerName[]" id="passengerName1" required>
+                        <input type="text" name="passengerName[]" required>
                         <label for="passengerAge1">Age:</label>
-                        <input type="number" name="passengerAge[]" id="passengerAge1" min="0" required>
+                        <input type="number" name="passengerAge[]" min="0" required>
                         <label for="passengerAadhar1">Aadhar:</label>
-                        <input type="text" name="passengerAadhar[]" id="passengerAadhar1" required>
+                        <input type="text" name="passengerAadhar[]" required>
                         <label for="passengerMobile1">Mobile:</label>
-                        <input type="tel" name="passengerMobile[]" id="passengerMobile1" required>
+                        <input type="text" name="passengerMobile[]" required>
                     </div>
-                    <div class="passenger-divider"></div>
+                    <div class="passenger-divider"></div> <!-- Dark line separator -->
                 </div>
                 <button type="button" id="addPassenger" class="add-passenger-btn">Add Another Passenger</button>
             </div>
-
+            
             <label for="advancePayment">Advance Payment (₹):</label>
-            <input type="number" name="advancePayment" id="advancePayment" min="0" required>
+            <input type="number" name="advancePayment" min="0" required>
 
             <button type="submit">Confirm Booking</button>
         </form>
@@ -257,117 +228,34 @@
 
     <script>
         const classSelect = document.getElementById('class');
-        const coachSelect = document.getElementById('coachName');
-        const seatContainer = document.getElementById('seatContainer');
-        const seatLayout = document.getElementById('seatLayout');
-
-        const coachOptions = {
-            'A': ['HA1', 'A1', 'A2', 'A3'],
-            'S': ['S1', 'S2'],
-            'B': ['B1', 'B2', 'B3']
-        };
-
-        function updateCoaches() {
-            const selectedClass = classSelect.value;
-            coachSelect.innerHTML = '<option value="" disabled selected>Select a Coach</option>'; // reset options
-
-            if (selectedClass) {
-                coachOptions[selectedClass].forEach(coach => {
-                    const option = document.createElement('option');
-                    option.value = coach;
-                    option.textContent = coach;
-                    coachSelect.appendChild(option);
-                });
-            }
-        }
+        const birthTypeContainer = document.getElementById('birthTypeContainer');
 
         classSelect.addEventListener('change', function() {
-            updateCoaches();
-            seatLayout.style.display = 'none';
-            seatContainer.innerHTML = '';
+            birthTypeContainer.style.display = (this.value === 'AC' || this.value === 'Sleeper') ? 'block' : 'none';
         });
 
-        coachSelect.addEventListener('change', function() {
-            const selectedCoach = this.value;
-            const selectedClass = classSelect.value;
-
-            if (selectedClass) {
-                seatLayout.style.display = 'block';
-                seatContainer.innerHTML = '';
-                const availableSeats = getSeatsForCoachAndClass(selectedCoach, selectedClass);
-                renderSeats(availableSeats);
-            }
-        });
-
-        function getSeatsForCoachAndClass(coach, trainClass) {
-            const seats = {
-                'HA1': { 'A': ['A1', 'A2', 'A3', 'A4'], 'S': ['S1', 'S2', 'S3', 'S4', 'S5'], 'B': [] },
-                'A1': { 'A': ['A1', 'A2', 'A3', 'A4'], 'S': ['S1', 'S2', 'S3', 'S4', 'S5'], 'B': [] },
-                'A2': { 'A': ['A1', 'A2'], 'S': [], 'B': [] },
-                'S1': { 'A': [], 'S': Array.from({ length: 80 }, (_, i) => `S${i + 1}`), 'B': [] },
-                'B1': { 'A': [], 'S': [], 'B': ['B1', 'B2', 'B3', 'B4'] },
-            };
-
-            return seats[coach] ? (coach === 'S1' ? seats[coach]['S'] : seats[coach][trainClass] || []) : [];
-        }
-
-        function renderSeats(availableSeats) {
-            if (availableSeats.length === 0) {
-                const fullMessage = document.createElement('div');
-                fullMessage.className = 'full';
-                fullMessage.textContent = 'No seats available for the selected Coach and Class.';
-                seatContainer.appendChild(fullMessage);
-                return;
-            }
-
-            const rows = Math.ceil(availableSeats.length / 5);
-
-            for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
-                const seatRow = document.createElement('div');
-                seatRow.className = 'seat-row';
-
-                const rowSeats = availableSeats.slice(rowIndex * 5, rowIndex * 5 + 5);
-
-                rowSeats.forEach(seat => {
-                    const seatDiv = document.createElement('div');
-                    seatDiv.className = 'seat available';
-                    seatDiv.textContent = seat;
-                    seatDiv.onclick = function () {
-                        if (seatDiv.classList.contains('selected')) {
-                            seatDiv.classList.remove('selected');
-                        } else {
-                            seatDiv.classList.add('selected');
-                        }
-                    };
-                    seatRow.appendChild(seatDiv);
-                });
-
-                seatContainer.appendChild(seatRow);
-            }
-        }
-
-        document.getElementById('addPassenger').addEventListener('click', function () {
+        document.getElementById('addPassenger').addEventListener('click', function() {
             const passengerContainer = document.getElementById('passengerContainer');
-            const passengerCount = passengerContainer.children.length / 2 + 1;
+            const passengerCount = passengerContainer.children.length / 2 + 1; // Incrementing the count
 
             const newPassenger = document.createElement('div');
             newPassenger.className = 'passenger';
             newPassenger.innerHTML = `
                 <label for="passengerName${passengerCount}">Name:</label>
-                <input type="text" name="passengerName[]" id="passengerName${passengerCount}" required>
+                <input type="text" name="passengerName[]" required>
                 <label for="passengerAge${passengerCount}">Age:</label>
-                <input type="number" name="passengerAge[]" id="passengerAge${passengerCount}" min="0" required>
+                <input type="number" name="passengerAge[]" min="0" required>
                 <label for="passengerAadhar${passengerCount}">Aadhar:</label>
-                <input type="text" name="passengerAadhar[]" id="passengerAadhar${passengerCount}" required>
+                <input type="text" name="passengerAadhar[]" required>
                 <label for="passengerMobile${passengerCount}">Mobile:</label>
-                <input type="tel" name="passengerMobile[]" id="passengerMobile${passengerCount}" required>
+                <input type="text" name="passengerMobile[]" required>
             `;
 
             const divider = document.createElement('div');
-            divider.className = 'passenger-divider';
+            divider.className = 'passenger-divider'; // Dark line separator
 
             passengerContainer.appendChild(newPassenger);
-            passengerContainer.appendChild(divider);
+            passengerContainer.appendChild(divider); // Adding the line after each passenger
         });
     </script>
 </body>
