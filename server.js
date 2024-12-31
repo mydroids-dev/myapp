@@ -350,11 +350,23 @@ app.post('/admin/bulk-booking', checkAdmin, upload.single('file'), async (req, r
                 return; // Skip invalid count
             }
 
-            const advance = parseFloat(advancePayment) || 0;
-            const discountValue = parseFloat(discount) || 0;        
-            const prices = { A: 4000, S: 3000, B: 2000 };
+            const advance = parseFloat(advancePayment);
+            const discountValue = parseFloat(discount);
+            const prices = { AC: 4000, Sleeper: 3000, General: 2000 };
+
+            // Validate travel class and calculate total amount
+            if (!prices[travelClass]) {
+                console.error(`Invalid travel class '${travelClass}' at row ${rowNumber}`);
+                return; // Skip invalid travel class
+            }
+
             const totalAmount = prices[travelClass] * passengersCount;
-            const remainingAmount = totalAmount - (advance + discountValue);
+            const remainingAmount = totalAmount - (isNaN(advance) ? 0 : advance) - (isNaN(discountValue) ? 0 : discountValue);
+
+            if (remainingAmount < 0) {
+                console.error(`Negative remaining amount at row ${rowNumber}. Total: ${totalAmount}, Advance: ${advance}, Discount: ${discountValue}`);
+                return; // Skip this row as remaining amount can't be negative
+            }
 
             const names = (passengerName || "").split(',').map(name => name.trim());
             const aadhars = (passengerAadhar || "").split(',').map(aadhar => aadhar.trim());
@@ -381,9 +393,9 @@ app.post('/admin/bulk-booking', checkAdmin, upload.single('file'), async (req, r
                 mobile,
                 numberOfPassengers: passengersCount,
                 totalAmount,
-                advance,
+                advance: isNaN(advance) ? 0 : advance,
                 remainingAmount,
-                discount: discountValue,
+                discount: isNaN(discountValue) ? 0 : discountValue,
                 createdAt: new Date(),
                 passengers
             };
