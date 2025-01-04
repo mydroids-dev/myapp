@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Slip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            page-break-after: always; /* Start a new page for each booking */
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+            margin: 0;
+        }
+        .info, .passenger-info {
+            margin: 15px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .info p, .passenger-info p {
+            margin: 5px 0;
+        }
+        .passenger-info {
+            border: none;
+        }
+        .passenger-info h3 {
+            margin: 0 0 10px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <% bookings.forEach(booking => { %>
+        <div class="container">
+            <div class="header">
+                <h1>Mata Vaishno Devi Public Charitable Trust</h1>
+                <h2>Travel Slip</h2>
+            </div>
+            
+            <div class="info">
+                <p><strong>Booking ID:</strong> <%= booking.bookingId %></p>
+                <p><strong>From Station:</strong> <%= booking.fromStation %></p>
+                <p><strong>To Station:</strong> <%= booking.toStation %></p>
+                <p><strong>Travel Class:</strong> <%= booking.travelClass %></p>
+                <p><strong>Coach Name:</strong> <%= booking.coachName %></p>
+                <p><strong>Seat Number:</strong> <%= booking.seatNumber.join(', ') %></p>
+                <p><strong>Travel Date:</strong> <%= booking.date.toISOString().split('T')[0] %></p>
+                <p><strong>Total Amount:</strong> ₹<%= booking.totalAmount.toFixed(2).replace('¹', '') %></p>
+                <p><strong>Advance Payment:</strong> ₹<%= booking.advance.toFixed(2).replace('¹', '') %></p>
+                <p><strong>Discount:</strong> ₹<%= booking.discount.toFixed(2).replace('¹', '') %></p>
+                <p><strong>Remaining Amount:</strong> ₹<%= booking.remainingAmount.toFixed(2).replace('¹', '') %></p>
+            </div>
+
+            <div class="passenger-info">
+                <h3>Passenger Information</h3>
+                <% booking.passengers.forEach(passenger => { %>
+                    <p><strong>Name:</strong> <%= passenger.name %>, <strong>Aadhar:</strong> <%= passenger.aadhar %>, <strong>Mobile:</strong> <%= passenger.mobile %>, <strong>Age:</strong> <%= passenger.age %></p>
+                <% }) %>
+            </div>
+
+            <div class="footer">
+                <p>Thank you for choosing Mata Vaishno Devi Public Charitable Trust!</p>
+            </div>
+        </div>
+    <% }) %>
+</body>
+</html>

@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const PDFDocument = require('pdfkit');
+const puppeteer = require('puppeteer');
 const ExcelJS = require('exceljs');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
@@ -112,6 +113,93 @@ app.post('/check-booking', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.render('view', { booking: null, error: 'Error fetching booking details.' });
+    }
+});
+
+// Route to generate bulk payment slips with a professional look
+app.get('/admin/bulk-slips', checkAdmin, async (req, res) => {
+    try {
+        const bookings = await Booking.find(); // Fetch all bookings
+        if (!bookings || bookings.length === 0) {
+            return res.send("No bookings found.");
+        }
+
+        const doc = new PDFDocument({ margin: 40 });
+        res.writeHead(200, {
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename="bulk-payment-slips.pdf"',
+        });
+        doc.pipe(res);
+
+        bookings.forEach((booking, index) => {
+            if (index > 0) doc.addPage(); // New page for each booking
+
+            // Header Section
+            doc.fillColor('#f2f2f2') // Background for the whole slip
+               .rect(0, 0, doc.page.width, doc.page.height)
+               .fill();
+
+            doc.fillColor('white')
+               .rect(50, 50, doc.page.width - 100, doc.page.height - 100)
+               .fill()
+               .stroke('#ddd'); // White container
+
+            doc.text('Mata Vaishno Devi Public Charitable Trust', { align: 'center', fontSize: 20, bold: true })
+               .moveDown(0.2)
+               .text('Travel Slip', { align: 'center', fontSize: 18, bold: true })
+               .moveDown(1);
+
+            // Booking Details Section
+            doc.fillColor('#f9f9f9')
+               .rect(60, 100, doc.page.width - 120, 220)
+               .fill()
+               .stroke('#ddd');
+
+            // Booking information
+            doc.fillColor('#333')
+               .fontSize(12)
+               .text(`Booking ID: ${booking.bookingId}`, 70, 110)
+               .text(`From Station: ${booking.fromStation}`, 70, 130)
+               .text(`To Station: ${booking.toStation}`, 70, 150)
+               .text(`Travel Class: ${booking.travelClass}`, 70, 170)
+               .text(`Coach Name: ${booking.coachName}`, 70, 190)
+               .text(`Seat Number: ${booking.seatNumber.join(', ')}`, 70, 210)
+               .text(`Travel Date: ${booking.date.toISOString().split('T')[0]}`, 70, 230)
+               .text(`Total Amount: ₹${booking.totalAmount.toFixed(2).replace('¹', '')}`, 70, 250)
+               .text(`Advance Payment: ₹${booking.advance.toFixed(2).replace('¹', '')}`, 70, 270)
+               .text(`Discount: ₹${booking.discount.toFixed(2).replace('¹', '')}`, 70, 290)
+               .text(`Remaining Amount: ₹${booking.remainingAmount.toFixed(2).replace('¹', '')}`, 70, 310);
+
+            // Passenger Information Section
+            doc.moveDown(0.5)
+               .fillColor('white')
+               .text('Passenger Information', { bold: true, underline: true, align: 'left' })
+               .moveDown(0.5);
+
+            booking.passengers.forEach(passenger => {
+                doc.fillColor('#333')
+                   .fontSize(12)
+                   .text(`Name: ${passenger.name}, Aadhar: ${passenger.aadhar}, Mobile: ${passenger.mobile}, Age: ${passenger.age}`)
+                   .moveDown(0.2);
+            });
+
+            // Footer Section
+            doc.moveDown(1)
+               .fillColor('#f2f2f2')
+               .text('Thank you for choosing Mata Vaishno Devi Public Charitable Trust!', { align: 'center', fontSize: 12 });
+
+            // Draw a border around the slip
+            doc.strokeColor('#ddd')
+               .lineWidth(1)
+               .rect(50, 50, doc.page.width - 100, doc.page.height - 100)
+               .stroke();
+        });
+
+        doc.end();
+
+    } catch (error) {
+        console.error(error);
+        res.send("Error generating the payment slips.");
     }
 });
 
